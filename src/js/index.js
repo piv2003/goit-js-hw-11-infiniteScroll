@@ -10,6 +10,7 @@ let page = 1;
 let value = '';
 let totalPage = 0;
 let totalImg = 0;
+let searchedImg = 0;
 const options = {
   root: null,
   rootMargin: '300px',
@@ -44,6 +45,7 @@ async function onSubmit(evt) {
   Notiflix.Notify.success(`Hooray! We found ${data.total} images..`);
   //Math.ceil - rounds the argument to the nearest higher integer
   totalPage = Math.ceil(data.total / data.hits.length);
+  searchedImg = data.total;
   observer.observe(refs.guard);
   // const markup = createMarkup(data.hits);
   totalImg += data.hits.length;
@@ -51,31 +53,32 @@ async function onSubmit(evt) {
   if (totalImg >= data.totalHits) {
     observer.unobserve(refs.guard);
 
-    Notiflix.Notify.warning(
-      "We're sorry, but you've reached the end of search results."
-    );
+    // Notiflix.Notify.warning(
+    //   "We're sorry, but you've reached the end of search results."
+    // );
   }
 }
 
 async function loadMoreData(evt) {
   page += 1;
   const data = await getData(value, page);
-
-  if (totalPage < page) {
-    Notiflix.Notify.info(
-      "We're sorry, but you've reached the end of search results."
-    );
-  } else {
-    Notiflix.Notify.success(
-      `Attention! Remaining ${(totalPage - page) * 40} images.`
-    );
-  }
+  
   refs.gallery.insertAdjacentHTML('beforeend', markupCard(data.hits));
   gallery.refresh(); //reinitializes the lightbox after manipulating the home
   const { height: cardHeight } = document
     .querySelector('.gallery')
     //returns the size of the element and its position relative to the viewport
     .firstElementChild.getBoundingClientRect();
+
+    if (totalPage < page) {
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+    } else if (searchedImg > (totalPage - page) * 40) {
+      Notiflix.Notify.success(
+        `Attention! Remaining ${(totalPage - page) * 40} images.`
+      );
+    }
 
   window.scrollBy({
     //scrolling the screen up three rows of images
