@@ -23,6 +23,7 @@ async function onSubmit(evt) {
   evt.preventDefault();
   value = evt.target.searchQuery.value.trim();
   page = 1;
+  searchedImg = 0;
   if (!value) {
     //if the user has not entered anything
     Notiflix.Notify.failure('Please enter a keyword to search.');
@@ -52,10 +53,6 @@ async function onSubmit(evt) {
   gallery.refresh(); //reinitializes the lightbox after manipulating the home
   if (totalImg >= data.totalHits) {
     observer.unobserve(refs.guard);
-
-    // Notiflix.Notify.warning(
-    //   "We're sorry, but you've reached the end of search results."
-    // );
   }
 }
 
@@ -75,7 +72,7 @@ async function loadMoreData(evt) {
         "We're sorry, but you've reached the end of search results."
       );
     }
-    if (searchedImg > (totalPage - page) * 40) {
+    if (searchedImg > (totalPage - page) * 40 && (totalPage - page) > 0 ) {
       Notiflix.Notify.success(
         `Attention! Remaining ${(totalPage - page) * 40} images.`
       );
