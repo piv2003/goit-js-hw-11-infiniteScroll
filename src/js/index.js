@@ -74,14 +74,15 @@ async function loadMoreData(evt) {
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
       );
-    } else if (searchedImg > (totalPage - page) * 40) {
+    }
+    if (searchedImg > (totalPage - page) * 40) {
       Notiflix.Notify.success(
         `Attention! Remaining ${(totalPage - page) * 40} images.`
       );
     }
 
   window.scrollBy({
-    //scrolling the screen up three rows of images
+    //scrolling the screen up one rows of images
     top: cardHeight * 1,
     behavior: 'smooth',
   });
